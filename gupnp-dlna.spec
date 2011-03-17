@@ -7,7 +7,7 @@ Summary(pl.UTF-8):	Biblioteka narzędziowa GUPnP ułatwiająca zadania związane
 Name:		gupnp-dlna
 # note: 0.6.x will be stable, 0.7.x unstable
 Version:	0.5.1
-Release:	1
+Release:	2
 License:	LGPL v2+
 Group:		Libraries
 #Source0Download: http://gupnp.org/download
@@ -102,6 +102,7 @@ rm -rf $RPM_BUILD_ROOT
 	DESTDIR=$RPM_BUILD_ROOT
 
 %{!?with_apidocs:%{__rm} -r $RPM_BUILD_ROOT%{_gtkdocdir}}
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/libgupnp-dlna-1.0.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -121,7 +122,6 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libgupnp-dlna-1.0.so
-%{_libdir}/libgupnp-dlna-1.0.la
 %{_includedir}/gupnp-dlna-1.0
 %{_pkgconfigdir}/gupnp-dlna-1.0.pc
 
