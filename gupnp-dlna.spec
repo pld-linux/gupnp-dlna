@@ -6,23 +6,25 @@ Summary:	GUPnP utility library to ease tasks related to DLNA
 Summary(pl.UTF-8):	Biblioteka narzędziowa GUPnP ułatwiająca zadania związane z DLNA
 Name:		gupnp-dlna
 # note: 0.6.x is stable, 0.7.x unstable
-Version:	0.6.1
+Version:	0.6.4
 Release:	1
 License:	LGPL v2+
 Group:		Libraries
-#Source0Download: http://gupnp.org/download
-Source0:	http://gupnp.org/sites/all/files/sources/%{name}-%{version}.tar.gz
-# Source0-md5:	0265d8864edcddc3367dcfe431c3bb53
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/gupnp-dlna/0.6/%{name}-%{version}.tar.xz
+# Source0-md5:	7032b810bdbba6dc8e61c175ed1b9069
 URL:		http://gupnp.org/
 BuildRequires:	autoconf >= 2.53
 BuildRequires:	automake
 BuildRequires:	docbook-dtd412-xml
+BuildRequires:	gobject-introspection-devel >= 0.6.4
 BuildRequires:	gstreamer-devel >= 0.10.29.2
 BuildRequires:	gstreamer-plugins-base-devel >= 0.10.32
 BuildRequires:	gtk-doc >= 1.0
 BuildRequires:	libtool
 BuildRequires:	libxml2-devel >= 1:2.5.0
 BuildRequires:	pkgconfig
+BuildRequires:	tar >= 1:1.22
+BuildRequires:	xz
 Requires:	gstreamer >= 0.10.29.2
 Requires:	gstreamer-plugins-base >= 0.10.32
 Requires:	libxml2 >= 1:2.5.0
@@ -82,9 +84,10 @@ Dokumentacja API biblioteki GUPnP DLNA.
 %setup -q
 
 %build
+mkdir m4
 %{__gtkdocize}
 %{__libtoolize}
-%{__aclocal}
+%{__aclocal} -I m4
 %{__autoconf}
 %{__autoheader}
 %{__automake}
@@ -118,11 +121,13 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gupnp-dlna-ls-profiles
 %attr(755,root,root) %{_libdir}/libgupnp-dlna-1.0.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libgupnp-dlna-1.0.so.2
+%{_libdir}/girepository-1.0/GUPnP-DLNA-1.0.typelib
 %{_datadir}/gupnp-dlna
 
 %files devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libgupnp-dlna-1.0.so
+%{_datadir}/gir-1.0/GUPnP-DLNA-1.0.gir
 %{_includedir}/gupnp-dlna-1.0
 %{_pkgconfigdir}/gupnp-dlna-1.0.pc
 
