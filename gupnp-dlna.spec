@@ -6,12 +6,12 @@ Summary:	GUPnP utility library to ease tasks related to DLNA
 Summary(pl.UTF-8):	Biblioteka narzędziowa GUPnP ułatwiająca zadania związane z DLNA
 Name:		gupnp-dlna
 # note: 0.6.x is stable, 0.7.x unstable
-Version:	0.6.4
+Version:	0.6.5
 Release:	1
 License:	LGPL v2+
 Group:		Libraries
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gupnp-dlna/0.6/%{name}-%{version}.tar.xz
-# Source0-md5:	7032b810bdbba6dc8e61c175ed1b9069
+# Source0-md5:	3c3e14292a77dcc07272d2339198c718
 URL:		http://gupnp.org/
 BuildRequires:	autoconf >= 2.53
 BuildRequires:	automake
@@ -84,7 +84,6 @@ Dokumentacja API biblioteki GUPnP DLNA.
 %setup -q
 
 %build
-mkdir m4
 %{__gtkdocize}
 %{__libtoolize}
 %{__aclocal} -I m4
@@ -121,13 +120,13 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gupnp-dlna-ls-profiles
 %attr(755,root,root) %{_libdir}/libgupnp-dlna-1.0.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libgupnp-dlna-1.0.so.2
-%{_libdir}/girepository-1.0/GUPnP-DLNA-1.0.typelib
+%{_libdir}/girepository-1.0/GUPnPDLNA-1.0.typelib
 %{_datadir}/gupnp-dlna
 
 %files devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libgupnp-dlna-1.0.so
-%{_datadir}/gir-1.0/GUPnP-DLNA-1.0.gir
+%{_datadir}/gir-1.0/GUPnPDLNA-1.0.gir
 %{_includedir}/gupnp-dlna-1.0
 %{_pkgconfigdir}/gupnp-dlna-1.0.pc
 
