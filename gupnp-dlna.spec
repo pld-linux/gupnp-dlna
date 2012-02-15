@@ -13,14 +13,14 @@ Group:		Libraries
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gupnp-dlna/0.6/%{name}-%{version}.tar.xz
 # Source0-md5:	3c3e14292a77dcc07272d2339198c718
 URL:		http://gupnp.org/
-BuildRequires:	autoconf >= 2.53
-BuildRequires:	automake
+BuildRequires:	autoconf >= 2.63
+BuildRequires:	automake >= 1:1.11
 BuildRequires:	docbook-dtd412-xml
 BuildRequires:	gobject-introspection-devel >= 0.6.4
 BuildRequires:	gstreamer-devel >= 0.10.29.2
 BuildRequires:	gstreamer-plugins-base-devel >= 0.10.32
 BuildRequires:	gtk-doc >= 1.0
-BuildRequires:	libtool
+BuildRequires:	libtool >= 2:2.2
 BuildRequires:	libxml2-devel >= 1:2.5.0
 BuildRequires:	pkgconfig
 BuildRequires:	tar >= 1:1.22
