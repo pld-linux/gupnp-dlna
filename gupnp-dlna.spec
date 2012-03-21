@@ -6,12 +6,12 @@ Summary:	GUPnP utility library to ease tasks related to DLNA
 Summary(pl.UTF-8):	Biblioteka narzędziowa GUPnP ułatwiająca zadania związane z DLNA
 Name:		gupnp-dlna
 # note: 0.6.x is stable, 0.7.x unstable
-Version:	0.6.5
+Version:	0.6.6
 Release:	1
 License:	LGPL v2+
 Group:		Libraries
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gupnp-dlna/0.6/%{name}-%{version}.tar.xz
-# Source0-md5:	3c3e14292a77dcc07272d2339198c718
+# Source0-md5:	4e3151125de991f474f728c1c5343ab1
 URL:		http://gupnp.org/
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.11
