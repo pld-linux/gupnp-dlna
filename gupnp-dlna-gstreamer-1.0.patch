@@ -1,0 +1,191 @@
+From ecad90c58ec74849e782cf4db6eb41675ce7cfa9 Mon Sep 17 00:00:00 2001
+From: Jens Georg <mail@jensge.org>
+Date: Mon, 23 Jan 2012 18:21:33 +0000
+Subject: Port to 0.11 API
+
+---
+diff --git a/configure.ac b/configure.ac
+index 9db94d4..921d1c1 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -39,7 +39,7 @@ LT_INIT([win32-dll])
+ 
+ PKG_CHECK_MODULES(LIBXML, libxml-2.0 >= 2.5.0)
+ 
+-GST_MAJORMINOR=0.10
++GST_MAJORMINOR=0.11
+ GST_REQ=0.10.29.2
+ GSTPBU_REQ=0.10.32
+ 
+diff --git a/libgupnp-dlna/gupnp-dlna-discoverer.c b/libgupnp-dlna/gupnp-dlna-discoverer.c
+index faf21ff..87cab52 100644
+--- a/libgupnp-dlna/gupnp-dlna-discoverer.c
++++ b/libgupnp-dlna/gupnp-dlna-discoverer.c
+@@ -224,7 +224,7 @@ gupnp_dlna_discoverer_class_init (GUPnPDLNADiscovererClass *klass)
+                               NULL, NULL,
+                               gupnp_dlna_marshal_VOID__OBJECT_BOXED,
+                               G_TYPE_NONE, 2, GUPNP_TYPE_DLNA_INFORMATION,
+-                              GST_TYPE_G_ERROR);
++                              G_TYPE_ERROR);
+ 
+         /* Load DLNA profiles from disk */
+         if (g_type_from_name ("GstElement")) {
+diff --git a/libgupnp-dlna/gupnp-dlna-information.c b/libgupnp-dlna/gupnp-dlna-information.c
+index 5585893..250d817 100644
+--- a/libgupnp-dlna/gupnp-dlna-information.c
++++ b/libgupnp-dlna/gupnp-dlna-information.c
+@@ -76,8 +76,8 @@ gupnp_dlna_information_get_property (GObject    *object,
+                         break;
+ 
+                 case PROP_DISCOVERER_INFO:
+-                        gst_value_set_mini_object (value,
+-                                                   GST_MINI_OBJECT(priv->info));
++                        g_value_set_object (value,
++                                            G_OBJECT (priv->info));
+ 
+                         break;
+ 
+@@ -116,7 +116,7 @@ gupnp_dlna_information_set_property (GObject      *object,
+                         if (priv->info)
+                                 gst_discoverer_info_unref (priv->info);
+                         priv->info = GST_DISCOVERER_INFO
+-                                (gst_value_dup_mini_object (value));
++                                        (g_value_dup_object (value));
+ 
+                         break;
+ 
+@@ -174,13 +174,13 @@ gupnp_dlna_information_class_init (GUPnPDLNAInformationClass *klass)
+                                      G_PARAM_CONSTRUCT_ONLY);
+         g_object_class_install_property (object_class, PROP_DLNA_MIME, pspec);
+ 
+-        pspec = gst_param_spec_mini_object ("info",
+-                                            "Stream metadata",
+-                                            "Metadata of the stream in a "
+-                                            "GstDiscovererInfo structure",
+-                                            GST_TYPE_DISCOVERER_INFO,
+-                                            G_PARAM_READWRITE |
+-                                            G_PARAM_CONSTRUCT_ONLY);
++        pspec = g_param_spec_object ("info",
++                                     "Stream metadata",
++                                     "Metadata of the stream in a "
++                                     "GstDiscovererInfo structure",
++                                     GST_TYPE_DISCOVERER_INFO,
++                                     G_PARAM_READWRITE |
++                                     G_PARAM_CONSTRUCT_ONLY);
+         g_object_class_install_property (object_class,
+                                          PROP_DISCOVERER_INFO,
+                                          pspec);
+diff --git a/libgupnp-dlna/gupnp-dlna-profile.c b/libgupnp-dlna/gupnp-dlna-profile.c
+index b88fed6..804d28e 100644
+--- a/libgupnp-dlna/gupnp-dlna-profile.c
++++ b/libgupnp-dlna/gupnp-dlna-profile.c
+@@ -79,8 +79,8 @@ gupnp_dlna_profile_get_property (GObject    *object,
+                         break;
+ 
+                 case PROP_ENCODING_PROFILE:
+-                        gst_value_set_mini_object (value,
+-                                        GST_MINI_OBJECT (priv->enc_profile));
++                        g_value_set_object (value,
++                                            G_OBJECT (priv->enc_profile));
+                         break;
+ 
+                 case PROP_DLNA_EXTENDED:
+@@ -176,13 +176,13 @@ gupnp_dlna_profile_class_init (GUPnPDLNAProfileClass *klass)
+                                      G_PARAM_CONSTRUCT_ONLY);
+         g_object_class_install_property (object_class, PROP_DLNA_MIME, pspec);
+ 
+-        pspec = gst_param_spec_mini_object ("encoding-profile",
+-                                            "Encoding Profile for the "
+-                                            "DLNA Profile",
+-                                            "GstEncodingProfile object"
+-                                            "corresponding to the DLNA profile",
+-                                            GST_TYPE_ENCODING_PROFILE,
+-                                            G_PARAM_READABLE);
++        pspec = g_param_spec_object ("encoding-profile",
++                                     "Encoding Profile for the DLNA Profile",
++                                     "GstEncodingProfile object corresponding "
++                                     "to the DLNA profile",
++                                     GST_TYPE_ENCODING_PROFILE,
++                                     G_PARAM_READABLE);
++
+         g_object_class_install_property (object_class,
+                                          PROP_ENCODING_PROFILE,
+                                          pspec);
+diff --git a/tests/dlna-encoding.c b/tests/dlna-encoding.c
+index e819801..714cc1b 100644
+--- a/tests/dlna-encoding.c
++++ b/tests/dlna-encoding.c
+@@ -41,7 +41,7 @@ pad_added_cb (GstElement * uridecodebin, GstPad * pad, GstElement * encodebin)
+     GstCaps *caps;
+ 
+     /* Ask encodebin for a compatible pad */
+-    caps = gst_pad_get_caps (pad);
++    caps = gst_pad_query_caps (pad, NULL);
+     g_signal_emit_by_name (encodebin, "request-pad", caps, &sinkpad);
+     if (caps)
+       gst_caps_unref (caps);
+--
+cgit v0.9.0.2
+From f665ee10afdcf0d9ce4706b6ac0058e38e549681 Mon Sep 17 00:00:00 2001
+From: Jens Georg <mail@jensge.org>
+Date: Wed, 25 Jul 2012 06:59:15 +0000
+Subject: More 1.0 fixes
+
+---
+diff --git a/configure.ac b/configure.ac
+index 921d1c1..f403377 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -39,7 +39,7 @@ LT_INIT([win32-dll])
+ 
+ PKG_CHECK_MODULES(LIBXML, libxml-2.0 >= 2.5.0)
+ 
+-GST_MAJORMINOR=0.11
++GST_MAJORMINOR=1.0
+ GST_REQ=0.10.29.2
+ GSTPBU_REQ=0.10.32
+ 
+diff --git a/libgupnp-dlna/Makefile.am b/libgupnp-dlna/Makefile.am
+index 55f4ed2..4c93cc5 100644
+--- a/libgupnp-dlna/Makefile.am
++++ b/libgupnp-dlna/Makefile.am
+@@ -65,9 +65,9 @@ INTROSPECTION_COMPILER_ARGS = --includedir=$(top_srcdir)
+ 
+ if HAVE_INTROSPECTION
+ GUPnPDLNA-1.0.gir: libgupnp-dlna-1.0.la
+-GUPnPDLNA_1_0_gir_INCLUDES = libxml2-2.0 GObject-2.0 GstPbutils-0.10
++GUPnPDLNA_1_0_gir_INCLUDES = libxml2-2.0 GObject-2.0 GstPbutils-1.0
+ GUPnPDLNA_1_0_gir_CFLAGS =  $(INCLUDES) $(AM_CFLAGS)
+-GUPnPDLNA_1_0_gir_LIBS = libgupnp-dlna-1.0.la gstreamer-0.10
++GUPnPDLNA_1_0_gir_LIBS = libgupnp-dlna-1.0.la gstreamer-1.0
+ GUPnPDLNA_1_0_gir_FILES = $(introspection_sources)
+ GUPnPDLNA_1_0_gir_NAMESPACE = GUPnPDLNA
+ GUPnPDLNA_1_0_gir_VERSION = 1.0
+diff --git a/libgupnp-dlna/profile-loading.c b/libgupnp-dlna/profile-loading.c
+index 874fe44..783aa1e 100644
+--- a/libgupnp-dlna/profile-loading.c
++++ b/libgupnp-dlna/profile-loading.c
+@@ -57,7 +57,7 @@ merge_caps (GstCaps *caps1, GstCaps *caps2)
+         if (!gst_caps_is_any (caps1) && !gst_caps_is_any (caps2)) {
+                 any = TRUE;
+                 gst_caps_merge (caps1, gst_caps_copy (caps2));
+-                gst_caps_do_simplify (caps1);
++                gst_caps_simplify (caps1);
+         }
+ 
+         ret = gst_caps_make_writable (caps1);
+diff --git a/tests/dlna-encoding.c b/tests/dlna-encoding.c
+index 714cc1b..8dc89b8 100644
+--- a/tests/dlna-encoding.c
++++ b/tests/dlna-encoding.c
+@@ -104,7 +104,7 @@ transcode_file (gchar * uri, gchar * outputuri, GstEncodingProfile * prof)
+   g_print (" Input URI  : %s\n", uri);
+   g_print (" Output URI : %s\n", outputuri);
+ 
+-  sink = gst_element_make_from_uri (GST_URI_SINK, outputuri, "sink");
++  sink = gst_element_make_from_uri (GST_URI_SINK, outputuri, "sink", NULL);
+   if (G_UNLIKELY (sink == NULL)) {
+     g_print ("Can't create output sink, most likely invalid output URI !\n");
+     return;
+--
+cgit v0.9.0.2
