@@ -1,34 +1,39 @@
 #
 # Conditional build:
 %bcond_without	apidocs		# do not build and package API docs
+%bcond_without	vala		# Vala binding
 #
 Summary:	GUPnP utility library to ease tasks related to DLNA
 Summary(pl.UTF-8):	Biblioteka narzędziowa GUPnP ułatwiająca zadania związane z DLNA
 Name:		gupnp-dlna
-# note: 0.6.x is stable, 0.7.x unstable
-Version:	0.6.6
-Release:	2
+# note: 0.8.x is stable, 0.9.x unstable
+Version:	0.8.0
+Release:	1
 License:	LGPL v2+
 Group:		Libraries
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/gupnp-dlna/0.6/%{name}-%{version}.tar.xz
-# Source0-md5:	4e3151125de991f474f728c1c5343ab1
-Patch0:		%{name}-glib2.patch
-Patch1:		%{name}-gstreamer-1.0.patch
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/gupnp-dlna/0.8/%{name}-%{version}.tar.xz
+# Source0-md5:	84fc9815c13fa7b6cfc15b9d6ce00415
 URL:		http://gupnp.org/
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.11
 BuildRequires:	docbook-dtd412-xml
+BuildRequires:	glib2-devel >= 1:2.24
 BuildRequires:	gobject-introspection-devel >= 0.6.4
-BuildRequires:	gstreamer-devel >= 0.10.29.2
-BuildRequires:	gstreamer-plugins-base-devel >= 0.10.32
-BuildRequires:	gtk-doc >= 1.0
+BuildRequires:	gstreamer-devel >= 1.0.0
+BuildRequires:	gstreamer-plugins-base-devel >= 1.0.0
+BuildRequires:	gtk-doc >= 1.11
 BuildRequires:	libtool >= 2:2.2
 BuildRequires:	libxml2-devel >= 1:2.5.0
 BuildRequires:	pkgconfig
 BuildRequires:	tar >= 1:1.22
+%{?with_vala:BuildRequires:	vala >= 2:0.18}
+%{?with_vala:BuildRequires:	vala-gupnp >= 0.10}
 BuildRequires:	xz
-Requires:	gstreamer >= 0.10.29.2
-Requires:	gstreamer-plugins-base >= 0.10.32
+# no --disable-vala option; build fails if vala is present, but vala-gupnp is not
+%{!?with_vala:BuildConflicts:	vala}
+Requires:	glib2 >= 1:2.24
+Requires:	gstreamer >= 1.0.0
+Requires:	gstreamer-plugins-base >= 1.0.0
 Requires:	libxml2 >= 1:2.5.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -48,8 +53,9 @@ Summary:	Header files for GUPnP DLNA library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki GUPnP DLNA
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	gstreamer-devel >= 0.10.29.2
-Requires:	gstreamer-plugins-base-devel >= 0.10.32
+Requires:	glib2-devel >= 1:2.24
+Requires:	gstreamer-devel >= 1.0.0
+Requires:	gstreamer-plugins-base-devel >= 1.0.0
 Requires:	libxml2-devel >= 1:2.5.0
 
 %description devel
@@ -82,10 +88,22 @@ API and internal documentation for GUPnP DLNA library.
 %description apidocs -l pl.UTF-8
 Dokumentacja API biblioteki GUPnP DLNA.
 
+%package -n vala-gupnp-dlna
+Summary:	Vala binding for GUPnP DLNA library
+Summary(pl.UTF-8):	Wiązanie języka Vala do biblioteki GUPnP DLNA
+Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}-%{release}
+Requires:	vala >= 2:0.18
+Requires:	vala-gupnp >= 0.10
+
+%description -n vala-gupnp-dlna
+Vala binding for GUPnP DLNA library.
+
+%description -n vala-gupnp-dlna -l pl.UTF-8
+Wiązanie języka Vala do biblioteki GUPnP DLNA.
+
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p1
 
 %build
 %{__gtkdocize}
@@ -109,7 +127,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %{!?with_apidocs:%{__rm} -r $RPM_BUILD_ROOT%{_gtkdocdir}}
 # obsoleted by pkg-config
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/libgupnp-dlna-1.0.la
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/libgupnp-dlna-1.1.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -120,26 +138,33 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog NEWS README TODO
-%attr(755,root,root) %{_bindir}/gupnp-dlna-info
-%attr(755,root,root) %{_bindir}/gupnp-dlna-ls-profiles
-%attr(755,root,root) %{_libdir}/libgupnp-dlna-1.0.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgupnp-dlna-1.0.so.2
-%{_libdir}/girepository-1.0/GUPnPDLNA-1.0.typelib
+%attr(755,root,root) %{_bindir}/gupnp-dlna-info-1.1
+%attr(755,root,root) %{_bindir}/gupnp-dlna-ls-profiles-1.1
+%attr(755,root,root) %{_libdir}/libgupnp-dlna-1.1.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libgupnp-dlna-1.1.so.3
+%{_libdir}/girepository-1.0/GUPnPDLNA-1.1.typelib
 %{_datadir}/gupnp-dlna
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libgupnp-dlna-1.0.so
-%{_datadir}/gir-1.0/GUPnPDLNA-1.0.gir
-%{_includedir}/gupnp-dlna-1.0
-%{_pkgconfigdir}/gupnp-dlna-1.0.pc
+%attr(755,root,root) %{_libdir}/libgupnp-dlna-1.1.so
+%{_datadir}/gir-1.0/GUPnPDLNA-1.1.gir
+%{_includedir}/gupnp-dlna-1.1
+%{_pkgconfigdir}/gupnp-dlna-1.1.pc
 
 %files static
 %defattr(644,root,root,755)
-%{_libdir}/libgupnp-dlna-1.0.a
+%{_libdir}/libgupnp-dlna-1.1.a
 
 %if %{with apidocs}
 %files apidocs
 %defattr(644,root,root,755)
 %{_gtkdocdir}/gupnp-dlna
+%endif
+
+%if %{with vala}
+%files -n vala-gupnp-dlna
+%defattr(644,root,root,755)
+%{_datadir}/vala/vapi/gupnp-dlna-1.1.deps
+%{_datadir}/vala/vapi/gupnp-dlna-1.1.vapi
 %endif
