@@ -9,6 +9,7 @@ Name:		gupnp-dlna
 # note: 0.8.x is stable, 0.9.x unstable
 Version:	0.8.0
 Release:	1
+Epoch:		1
 License:	LGPL v2+
 Group:		Libraries
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gupnp-dlna/0.8/%{name}-%{version}.tar.xz
@@ -52,7 +53,7 @@ do danego profilu itp.
 Summary:	Header files for GUPnP DLNA library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki GUPnP DLNA
 Group:		Development/Libraries
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	glib2-devel >= 1:2.24
 Requires:	gstreamer-devel >= 1.0.0
 Requires:	gstreamer-plugins-base-devel >= 1.0.0
@@ -68,7 +69,7 @@ Pliki nagłówkowe biblioteki GUPnP DLNA.
 Summary:	Static GUPnP DLNA library
 Summary(pl.UTF-8):	Statyczna biblioteka GUPnP DLNA
 Group:		Development/Libraries
-Requires:	%{name}-devel = %{version}-%{release}
+Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
 
 %description static
 Static GUPnP DLNA library.
@@ -92,7 +93,7 @@ Dokumentacja API biblioteki GUPnP DLNA.
 Summary:	Vala binding for GUPnP DLNA library
 Summary(pl.UTF-8):	Wiązanie języka Vala do biblioteki GUPnP DLNA
 Group:		Development/Libraries
-Requires:	%{name}-devel = %{version}-%{release}
+Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
 Requires:	vala >= 2:0.18
 Requires:	vala-gupnp >= 0.10
 
