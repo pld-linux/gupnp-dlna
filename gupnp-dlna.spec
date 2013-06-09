@@ -9,20 +9,20 @@ Summary:	GUPnP utility library to ease tasks related to DLNA
 Summary(pl.UTF-8):	Biblioteka narzędziowa GUPnP ułatwiająca zadania związane z DLNA
 Name:		gupnp-dlna
 # note: 0.10.x is stable, 0.11.x unstable
-Version:	0.10.1
+Version:	0.10.2
 Release:	1
 Epoch:		1
 License:	LGPL v2+
 Group:		Libraries
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gupnp-dlna/0.10/%{name}-%{version}.tar.xz
-# Source0-md5:	3ce99b8e62f870bbd56e6116e7f82596
+# Source0-md5:	091f1ef019e0777f4409434018d3b3f3
 Patch0:		%{name}-vala.patch
 URL:		http://gupnp.org/
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.11
 BuildRequires:	docbook-dtd412-xml
 BuildRequires:	glib2-devel >= 1:2.34
-BuildRequires:	gobject-introspection-devel >= 0.6.4
+BuildRequires:	gobject-introspection-devel >= 1.36.0
 %if %{with gstreamer0_10}
 BuildRequires:	gstreamer0.10-devel >= 0.10.36
 BuildRequires:	gstreamer0.10-plugins-base-devel >= 0.10.36
@@ -36,7 +36,7 @@ BuildRequires:	libtool >= 2:2.2
 BuildRequires:	libxml2-devel >= 1:2.5.0
 BuildRequires:	pkgconfig
 BuildRequires:	tar >= 1:1.22
-%{?with_vala:BuildRequires:	vala >= 2:0.18}
+%{?with_vala:BuildRequires:	vala >= 2:0.20}
 BuildRequires:	xz
 Requires:	glib2 >= 1:2.34
 Requires:	gstreamer >= 1.0.0
@@ -100,7 +100,7 @@ Summary:	Vala binding for GUPnP DLNA library
 Summary(pl.UTF-8):	Wiązanie języka Vala do biblioteki GUPnP DLNA
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
-Requires:	vala >= 2:0.18
+Requires:	vala >= 2:0.20
 
 %description -n vala-gupnp-dlna
 Vala binding for GUPnP DLNA library.
@@ -166,7 +166,7 @@ Summary:	Vala binding for GStreamer-specific GUPnP-DLNA library
 Summary(pl.UTF-8):	Wiązanie języka Vala do biblioteki GUPnP-DLNA dla GStreamera
 Group:		Development/Libraries
 Requires:	%{name}-gst-devel = %{epoch}:%{version}-%{release}
-Requires:	vala >= 2:0.18
+Requires:	vala >= 2:0.20
 Requires:	vala-gupnp-dlna-gst = %{epoch}:%{version}-%{release}
 
 %description -n vala-gupnp-dlna-gst
