@@ -239,7 +239,8 @@ Statyczna biblioteka GUPnP-DLNA dla GStreamera.
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%{__make} install \
+# (re)linking fails sometimes on parallel installs
+%{__make} -j1 install \
 	DESTDIR=$RPM_BUILD_ROOT
 
 %{!?with_apidocs:%{__rm} -r $RPM_BUILD_ROOT%{_gtkdocdir}}
