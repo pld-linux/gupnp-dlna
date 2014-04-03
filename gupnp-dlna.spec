@@ -4,13 +4,13 @@
 %bcond_without	vala		# Vala binding
 %bcond_without	gstreamer	# GStreamer 1.0 metadata backend
 %bcond_with	gstreamer0_10	# GStreamer 0.10 metadata backend
-#
+
 Summary:	GUPnP utility library to ease tasks related to DLNA
 Summary(pl.UTF-8):	Biblioteka narzędziowa GUPnP ułatwiająca zadania związane z DLNA
 Name:		gupnp-dlna
 # note: 0.10.x is stable, 0.11.x unstable
 Version:	0.10.2
-Release:	1
+Release:	2
 Epoch:		1
 License:	LGPL v2+
 Group:		Libraries
@@ -88,6 +88,9 @@ Summary:	GUPnP DLNA library API documentation
 Summary(pl.UTF-8):	Dokumentacja API biblioteki GUPnP DLNA
 Group:		Documentation
 Requires:	gtk-doc-common
+%if "%{_rpmversion}" >= "5"
+BuildArch:	noarch
+%endif
 
 %description apidocs
 API and internal documentation for GUPnP DLNA library.
@@ -154,6 +157,9 @@ Summary:	GStreamer-specific GUPnP-DLNA library API documentation
 Summary(pl.UTF-8):	Dokumentacja API biblioteki GUPnP-DLNA dla GStreamera
 Group:		Documentation
 Requires:	gtk-doc-common
+%if "%{_rpmversion}" >= "5"
+BuildArch:	noarch
+%endif
 
 %description gst-apidocs
 GStreamer-specific GUPnP-DLNA library API documentation.
