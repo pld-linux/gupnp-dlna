@@ -10,7 +10,7 @@ Summary(pl.UTF-8):	Biblioteka narzędziowa GUPnP ułatwiająca zadania związane
 Name:		gupnp-dlna
 # note: 0.10.x is stable, 0.11.x unstable
 Version:	0.10.2
-Release:	2
+Release:	3
 Epoch:		1
 License:	LGPL v2+
 Group:		Libraries
