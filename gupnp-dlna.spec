@@ -10,7 +10,7 @@ Summary(pl.UTF-8):	Biblioteka narzędziowa GUPnP ułatwiająca zadania związane
 Name:		gupnp-dlna
 # note: 0.10.x is stable, 0.11.x unstable
 Version:	0.10.4
-Release:	1
+Release:	2
 Epoch:		1
 License:	LGPL v2+
 Group:		Libraries
@@ -104,6 +104,9 @@ Summary(pl.UTF-8):	Wiązanie języka Vala do biblioteki GUPnP DLNA
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
 Requires:	vala >= 2:0.20
+%if "%{_rpmversion}" >= "5"
+BuildArch:	noarch
+%endif
 
 %description -n vala-gupnp-dlna
 Vala binding for GUPnP DLNA library.
