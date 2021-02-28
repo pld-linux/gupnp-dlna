@@ -88,9 +88,7 @@ Summary:	GUPnP DLNA library API documentation
 Summary(pl.UTF-8):	Dokumentacja API biblioteki GUPnP DLNA
 Group:		Documentation
 Requires:	gtk-doc-common
-%if "%{_rpmversion}" >= "5"
 BuildArch:	noarch
-%endif
 
 %description apidocs
 API and internal documentation for GUPnP DLNA library.
@@ -104,9 +102,7 @@ Summary(pl.UTF-8):	Wiązanie języka Vala do biblioteki GUPnP DLNA
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
 Requires:	vala >= 2:0.20
-%if "%{_rpmversion}" >= "5"
 BuildArch:	noarch
-%endif
 
 %description -n vala-gupnp-dlna
 Vala binding for GUPnP DLNA library.
@@ -160,9 +156,7 @@ Summary:	GStreamer-specific GUPnP-DLNA library API documentation
 Summary(pl.UTF-8):	Dokumentacja API biblioteki GUPnP-DLNA dla GStreamera
 Group:		Documentation
 Requires:	gtk-doc-common
-%if "%{_rpmversion}" >= "5"
 BuildArch:	noarch
-%endif
 
 %description gst-apidocs
 GStreamer-specific GUPnP-DLNA library API documentation.
