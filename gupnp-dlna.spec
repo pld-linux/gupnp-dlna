@@ -3,30 +3,24 @@
 %bcond_without	apidocs		# do not build and package API docs
 %bcond_without	vala		# Vala binding
 %bcond_without	gstreamer	# GStreamer 1.0 metadata backend
-%bcond_with	gstreamer0_10	# GStreamer 0.10 metadata backend
 
 Summary:	GUPnP utility library to ease tasks related to DLNA
 Summary(pl.UTF-8):	Biblioteka narzędziowa GUPnP ułatwiająca zadania związane z DLNA
 Name:		gupnp-dlna
-# note: 0.10.x is stable, 0.11.x unstable
-Version:	0.10.5
+# note: 0.12.x is stable, 0.13.x unstable
+Version:	0.12.0
 Release:	1
 Epoch:		1
 License:	LGPL v2+
 Group:		Libraries
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/gupnp-dlna/0.10/%{name}-%{version}.tar.xz
-# Source0-md5:	2d0dc1e4189d0243ac3838ece1e8fea0
-Patch0:		%{name}-vala.patch
-URL:		http://gupnp.org/
+Source0:	https://download.gnome.org/sources/gupnp-dlna/0.12/%{name}-%{version}.tar.xz
+# Source0-md5:	763703ddfa2660ed881296cab5e07047
+URL:		https://wiki.gnome.org/Projects/GUPnP
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.11
 BuildRequires:	docbook-dtd412-xml
-BuildRequires:	glib2-devel >= 1:2.34
+BuildRequires:	glib2-devel >= 1:2.38
 BuildRequires:	gobject-introspection-devel >= 1.36.0
-%if %{with gstreamer0_10}
-BuildRequires:	gstreamer0.10-devel >= 0.10.36
-BuildRequires:	gstreamer0.10-plugins-base-devel >= 0.10.36
-%endif
 %if %{with gstreamer}
 BuildRequires:	gstreamer-devel >= 1.0.0
 BuildRequires:	gstreamer-plugins-base-devel >= 1.0.0
@@ -35,13 +29,17 @@ BuildRequires:	gtk-doc >= 1.11
 BuildRequires:	libtool >= 2:2.2
 BuildRequires:	libxml2-devel >= 1:2.5.0
 BuildRequires:	pkgconfig
+BuildRequires:	rpm-build >= 4.6
 BuildRequires:	tar >= 1:1.22
 %{?with_vala:BuildRequires:	vala >= 2:0.20}
 BuildRequires:	xz
-Requires:	glib2 >= 1:2.34
+Requires:	glib2 >= 1:2.38
 Requires:	gstreamer >= 1.0.0
 Requires:	gstreamer-plugins-base >= 1.0.0
 Requires:	libxml2 >= 1:2.5.0
+Obsoletes:	gupnp-dlna-gst-legacy < 0.11
+Obsoletes:	gupnp-dlna-gst-legacy-devel < 0.11
+Obsoletes:	gupnp-dlna-gst-legacy-static < 0.11
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -60,7 +58,7 @@ Summary:	Header files for GUPnP DLNA library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki GUPnP DLNA
 Group:		Development/Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	glib2-devel >= 1:2.34
+Requires:	glib2-devel >= 1:2.38
 Requires:	gstreamer-devel >= 1.0.0
 Requires:	gstreamer-plugins-base-devel >= 1.0.0
 Requires:	libxml2-devel >= 1:2.5.0
@@ -178,50 +176,8 @@ Vala binding for GStreamer-specific GUPnP-DLNA library.
 %description -n vala-gupnp-dlna-gst -l pl.UTF-8
 Wiązanie języka Vala do biblioteki GUPnP-DLNA dla GStreamera.
 
-%package gst-legacy
-Summary:	GStreamer 0.10-specific GUPnP-DLNA library
-Summary(pl.UTF-8):	Biblioteka GUPnP-DLNA dla GStreamera 0.10
-Group:		Libraries
-Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	gstreamer0.10 >= 0.10.36
-Requires:	gstreamer0.10-plugins-base >= 0.10.36
-
-%description gst-legacy
-GStreamer 0.10-specific GUPnP-DLNA library.
-
-%description gst-legacy -l devel
-Biblioteka GUPnP-DLNA dla GStreamera 0.10.
-
-%package gst-legacy-devel
-Summary:	Header file for GStreamer 0.10-specific GUPnP-DLNA library
-Summary(pl.UTF-8):	Plik nagłówkowy biblioteki GUPnP-DLNA dla GStreamera 0.10
-Group:		Development/Libraries
-Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
-Requires:	%{name}-gst-legacy = %{epoch}:%{version}-%{release}
-Requires:	gstreamer-devel >= 1.0.0
-Requires:	gstreamer-plugins-base-devel >= 1.0.0
-
-%description gst-legacy-devel
-Header file for GStreamer-specific GUPnP-DLNA library.
-
-%description gst-legacy-devel -l pl.UTF-8
-Plik nagłówkowy biblioteki GUPnP-DLNA dla GStreamera.
-
-%package gst-legacy-static
-Summary:	Static GStreamer-specific GUPnP-DLNA library
-Summary(pl.UTF-8):	Statyczna biblioteka GUPnP-DLNA dla GStreamera
-Group:		Development/Libraries
-Requires:	%{name}-gst-legacy-devel = %{epoch}:%{version}-%{release}
-
-%description gst-legacy-static
-Static GStreamer-specific GUPnP-DLNA library.
-
-%description gst-legacy-static -l pl.UTF-8
-Statyczna biblioteka GUPnP-DLNA dla GStreamera.
-
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 %{__gtkdocize}
@@ -233,7 +189,6 @@ Statyczna biblioteka GUPnP-DLNA dla GStreamera.
 %configure \
 	%{?with_apidocs:--enable-gtk-doc} \
 	%{!?with_gstreamer:--disable-gstreamer-metadata-backend} \
-	%{?with_gstreamer0_10:--enable-legacy-gstreamer-metadata-backend} \
 	--disable-silent-rules \
 	--with-html-dir=%{_gtkdocdir}
 
@@ -248,7 +203,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %{!?with_apidocs:%{__rm} -r $RPM_BUILD_ROOT%{_gtkdocdir}}
 %{?with_gstreamer:%{__rm} $RPM_BUILD_ROOT%{_libdir}/gupnp-dlna/libgstreamer.la}
-%{?with_gstreamer0_10:%{__rm} $RPM_BUILD_ROOT%{_libdir}/gupnp-dlna/libgstreamer-legacy.la}
 # obsoleted by pkg-config
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libgupnp-dlna-*.la
 
@@ -264,7 +218,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gupnp-dlna-info-2.0
 %attr(755,root,root) %{_bindir}/gupnp-dlna-ls-profiles-2.0
 %attr(755,root,root) %{_libdir}/libgupnp-dlna-2.0.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgupnp-dlna-2.0.so.3
+%attr(755,root,root) %ghost %{_libdir}/libgupnp-dlna-2.0.so.4
 %dir %{_libdir}/gupnp-dlna
 %{_libdir}/girepository-1.0/GUPnPDLNA-2.0.typelib
 %{_datadir}/gupnp-dlna-2.0
@@ -308,7 +262,7 @@ rm -rf $RPM_BUILD_ROOT
 %files gst
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libgupnp-dlna-gst-2.0.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgupnp-dlna-gst-2.0.so.3
+%attr(755,root,root) %ghost %{_libdir}/libgupnp-dlna-gst-2.0.so.4
 %{_libdir}/girepository-1.0/GUPnPDLNAGst-2.0.typelib
 %attr(755,root,root) %{_libdir}/gupnp-dlna/libgstreamer.so
 
@@ -335,22 +289,4 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/vala/vapi/gupnp-dlna-gst-2.0.deps
 %{_datadir}/vala/vapi/gupnp-dlna-gst-2.0.vapi
 %endif
-%endif
-
-%if %{with gstreamer0_10}
-%files gst-legacy
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libgupnp-dlna-gst-legacy-2.0.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgupnp-dlna-gst-legacy-2.0.so.3
-%attr(755,root,root) %{_libdir}/gupnp-dlna/libgstreamer-legacy.so
-
-%files gst-legacy-devel
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libgupnp-dlna-gst-legacy-2.0.so
-%{_includedir}/gupnp-dlna-2.0/libgupnp-dlna/gupnp-dlna-gst-legacy-utils.h
-%{_pkgconfigdir}/gupnp-dlna-gst-legacy-2.0.pc
-
-%files gst-legacy-static
-%defattr(644,root,root,755)
-%{_libdir}/libgupnp-dlna-gst-legacy-2.0.a
 %endif
